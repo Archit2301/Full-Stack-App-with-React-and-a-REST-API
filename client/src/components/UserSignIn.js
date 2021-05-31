@@ -26,7 +26,7 @@ export default class UserSignIn extends Component {
             submitButtonText="Sign In"
             elements={() => (
               <React.Fragment>
-                <label for="emailAddress">Email Address</label>
+                <label>Email Address</label>
                 <input 
                   id="emailAddress" 
                   name="emailAddress" 
@@ -34,7 +34,7 @@ export default class UserSignIn extends Component {
                   value={emailAddress} 
                   onChange={this.change} 
                 />
-                <label for="password">Password</label>
+                <label>Password</label>
                 <input 
                   id="password" 
                   name="password"
@@ -63,10 +63,26 @@ export default class UserSignIn extends Component {
   }
 
   submit = () => {
-
+    const { context } = this.props;
+    const { from } = this.props.location.state || { from: { pathname: '/authenticated' } };
+    const { emailAddress, password } = this.state;
+    context.actions.signIn(emailAddress, password)
+      .then( user => {
+        if (user === null) {
+          this.setState(() => {
+            return { errors: ['Sign-in was unsuccessful'] };
+          });
+        } else {
+          this.props.history.push(from);          
+        }
+      })
+      .catch(err => {
+        console.log(err);
+        this.props.history.push('/error');
+      })
   }
 
   cancel = () => {
-
+    this.props.history.push('/');
   }
 }
