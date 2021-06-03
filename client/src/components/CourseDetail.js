@@ -2,29 +2,29 @@ import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
 import axios from 'axios';
 
+
 export default class CourseDetail extends Component {
 
-  constructor() {
-    super();
-    this.state = {
-      course: [],
-      user: []
-    };
-  }  
+  state = {
+    course: [],
+    user: [],
+    errors: []
+  }
 
   componentDidMount() {
-    const { id } = this.props.match.params;
-    axios.get(`http://localhost:5000/api/courses/${id}`)
+    
+    axios.get(`http://localhost:5000/api/${this.props.match.url}`)
       .then(response => {
         this.setState({
           course: response.data[0],
-          user: response.data[0].User
+         
         });
       })
   }
 
   render() {
-    console.log(this.state.user);
+    
+    const course = this.state.course;
 
     return (
       <main>
@@ -42,18 +42,18 @@ export default class CourseDetail extends Component {
             <div className="main--flex">
               <div>
                 <h3 className="course--detail--title">Course</h3>
-                <h4 className="course--name">{this.state.course.title}</h4>
-                <p>By: {this.state.user.firstName} {this.state.user.lastName}</p>
+                <h4 className="course--name">{course.title}</h4>
+                <p>By: </p>
 
-                <ReactMarkdown source={this.state.course.description} />
+                <ReactMarkdown source={course.description} />
               </div>
               <div>
                 <h3 className="course--detail--title">Estimate Time</h3>
-                <p>{this.state.course.estimatedTime}</p>
+                <p>{course.estimatedTime}</p>
 
                 <h3 className="course--detail--title">Materials Needed</h3>
                 <ul className="course--detail--list">
-                  <ReactMarkdown source={this.state.course.materialsNeeded} />
+                  <ReactMarkdown source={course.materialsNeeded} />
                 </ul>
               </div>
             </div>

@@ -10,27 +10,32 @@ exports.authenticateUser = async (req, res, next) => {
   let message;
   const credentials = auth(req);
 
-    if (credentials) {
-      const user = await User.findOne({ where: {emailAddress: credentials.name} });
-      if (user) {
-        const authenticated = bcrypt.compareSync(credentials.pass, user.password);
-        if (authenticated) {
-          console.log(`Authentication successful for user: ${user.firstName} ${user.lastName}`);
-          req.currentUser = user;
-        } else {
-          message = `Authentication failed for user: ${user.firstName} ${user.lastName}`;
-        }
+  if (credentials) {
+    const user = await User.findOne({
+      where: { emailAddress: credentials.name },
+    });
+
+    if (user) {
+      const authenticated = bcrypt.compareSync(credentials.pass, user.password);
+
+      if (authenticated) {
+        req.currentUser = user;
+        console.log(
+          `Authentication successful for emailAddress: ${user.emailAddress}`
+        );
       } else {
-        message = `User Not Found for username: ${credentials.name}`;
+        message = `Authentication failure for emailAddress: ${user.emailAddress}`;
       }
     } else {
-      message = 'Authentication Header Not Found';
+      message = `User not found for emailAddress: ${credentials.name}`;
     }
-    if (message) {
-      console.warn(message);
-      res.status(401)
-        .json({ message: 'Access Denied' });
-    } else {
-      next();
-    }
+  } else {
+    message = 'Auth header not found';
+  }
+  if (message) {
+    console.warn(message);
+    res.status(401).json({ message: 'Access Denied' });
+  } else {
+    next();
+  }
 };

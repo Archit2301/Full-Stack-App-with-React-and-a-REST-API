@@ -18,6 +18,8 @@ export default class CreateCourse extends Component {
       materialsNeeded,
       errors  
     } = this.state;
+
+    const { context } = this.props;
     
     return(
       <div>
@@ -82,19 +84,37 @@ export default class CreateCourse extends Component {
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
-    
+
     this.setState(() => {
-      return {
-        [name]: value  
-      };  
-    });
-  }
+        return {
+            [name]: value
+        }
+    })
+}
 
-  cancel = () => {
+submit = () => {
+    const { context } = this.props;
+    const { title, description, estimatedTime, materialsNeeded } = this.state;
+    const course = { title, description, estimatedTime, materialsNeeded, userId }
 
-  }
+    //triggers createCourse API call on submit
+    context.data.createCourse(course)
+        .then(errors => {
+            if (errors.length) {
+                this.setState({errors})
+                    return { errors: ['Course was not created'] }
+            } else {
+                this.props.history.push('/');
+                console.log(`SUCCESS! course ${title} has been created!`);
+            }
+        })
+        .catch(err => {
+            console.log(err);
+            this.props.history.push('/error')
+        })
+}
 
-  submit = () => {
-     
-  }
+cancel = () => {
+    this.props.history.push('/');
+}
 }
