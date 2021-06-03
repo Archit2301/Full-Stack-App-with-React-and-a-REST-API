@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactMarkdown from 'react-markdown';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -17,22 +18,34 @@ export default class CourseDetail extends Component {
       .then(response => {
         this.setState({
           course: response.data[0],
-         
+          user: response.data[0].student          
         });
       })
   }
 
   render() {
-    
-    const course = this.state.course;
+    const { context } = this.props;
+    const authUser = context.authenticatedUser;
+    const { course } = this.state;
+    const { firstName, lastName } = this.state.user
 
     return (
       <main>
         <div className="actions--bar">
             <div className="wrap">
-              <a className="button" href="">Update Course</a>
-              <a className="button" href="">Delete Course</a>
-              <a className="button button-secondary" href="">Return to List</a>
+              { authUser && authUser.id === course.userId  ? (
+              <React.Fragment>  
+                <Link className="button" to={`/courses/${course.id}/update`}>Update Course</Link>
+                <Link onClick={this.handleDelete} className="button" to="#">Delete Course</Link>
+                <Link className="button button-secondary" to="/">Return to List</Link>
+              </React.Fragment>
+            )
+              :
+            (
+              <React.Fragment>
+                <Link className="button button-secondary" to="/">Return to List</Link>
+              </React.Fragment>
+            )}
             </div>
         </div>  
 
@@ -43,7 +56,7 @@ export default class CourseDetail extends Component {
               <div>
                 <h3 className="course--detail--title">Course</h3>
                 <h4 className="course--name">{course.title}</h4>
-                <p>By: </p>
+                <p>By: {firstName} {lastName}</p>
 
                 <ReactMarkdown source={course.description} />
               </div>
