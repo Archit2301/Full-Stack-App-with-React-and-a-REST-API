@@ -1,84 +1,76 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Form from './Form';
 
 export default class CreateCourse extends Component {
-  state= {
+  state = {
     title: '',
     description: '',
     estimatedTime: '',
     materialsNeeded: '',
-    errors: []  
-  }  
+    errors: [],
+  };
 
   render() {
-    const {
-      title, 
-      description, 
-      estimatedTime,
-      materialsNeeded,
-      errors  
-    } = this.state;
-
     const { context } = this.props;
-    
-    return(
-      <div>
-        <div class="wrap">
+    const authUser = context.authenticatedUser;
+
+    const { title, description, estimatedTime, materialsNeeded, errors } =
+      this.state;
+
+    return (
+      <div className="wrap">
         <h2>Create Course</h2>
-          <Form
-            cancel={this.cancel}
-            errors={errors}
-            submit={this.submit}
-            submitButtonText="Create Course"
-            elements={() => (
-              <React.Fragment>
-                <div class="main--flex">
-                  <div>
-                    <label for="title">Course Title</label>
-                    <input 
-                      id="title"
-                      name="title"
-                      type="text"
-                      value={title}
-                      onChange={this.change}
-                    />
-
-                    <p>By Joe Smith</p>
-
-                    <label for="description">Description</label>
-                    <input 
-                      id="description"
-                      name="description"
-                      type="text"
-                      value={description}
-                      onChange={this.change}
-                    />  
-                  </div>
-                  <div>
-                    <label for="estimatedTime">Estimated Time</label>
-                    <input 
-                      id="estimatedTime"
-                      name="estimatedTime"
-                      type="text"
-                      value={estimatedTime}
-                      onChange={this.change}
-                    />
-
-                    <label for="materialsNeeded">Materials Needed</label>
-                    <textarea 
-                      id="materialsNeeded"
-                      name="materialsNeeded"
-                      value={materialsNeeded}
-                      onChange={this.change}
-                    />  
-                  </div>                           
-                </div>  
-              </React.Fragment>  
-            )}
-          />  
-        </div>  
-      </div>  
-    );    
+        <Form
+          cancel={this.cancel}
+          errors={errors}
+          submit={this.submit}
+          submitButtonText="Create Course"
+          elements={() => (
+            <React.Fragment>
+              <div className="main--flex">
+                <div>
+                  <label htmlFor="title">Course Title</label>
+                  <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    value={title}
+                    onChange={this.change}
+                  />
+                  <p>
+                    By {authUser.firstName} {authUser.lastName}
+                  </p>
+                  <label htmlFor="description">Course Description</label>
+                  <textarea
+                    id="description"
+                    name="description"
+                    value={description}
+                    onChange={this.change}
+                  ></textarea>
+                </div>
+                <div>
+                  <label htmlFor="estimatedTime">Estimated Time</label>
+                  <input
+                    onChange={this.change}
+                    type="text"
+                    id="estimatedTime"
+                    name="estimatedTime"
+                    value={estimatedTime}
+                  />
+                  <label htmlFor="materialsNeeded">Materials Needed</label>
+                  <textarea
+                    onChange={this.change}
+                    name="materialsNeeded"
+                    id="materialsNeeded"
+                    value={materialsNeeded}
+                  ></textarea>
+                </div>
+              </div>
+            </React.Fragment>
+          )}
+        />
+      </div>
+    )
   }
 
   change = (event) => {
@@ -86,35 +78,36 @@ export default class CreateCourse extends Component {
     const value = event.target.value;
 
     this.setState(() => {
-        return {
-            [name]: value
-        }
-    })
-}
+      return {
+        [name]: value,
+      };
+    });
+  };
 
-submit = () => {
+  submit = () => {
     const { context } = this.props;
+    const { emailAddress, password, id } = context.authenticatedUser;
+    const userId = id;
     const { title, description, estimatedTime, materialsNeeded } = this.state;
-    const course = { title, description, estimatedTime, materialsNeeded, userId }
 
-    //triggers createCourse API call on submit
-    context.data.createCourse(course)
-        .then(errors => {
-            if (errors.length) {
-                this.setState({errors})
-                    return { errors: ['Course was not created'] }
-            } else {
-                this.props.history.push('/');
-                console.log(`SUCCESS! course ${title} has been created!`);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-            this.props.history.push('/error')
-        })
-}
+    const course = { title, userId, description, estimatedTime, materialsNeeded };
 
-cancel = () => {
+    context.data.createCourse(course, emailAddress, password)
+      .then((errors) => {
+        if (errors.length) {
+          this.setState({ errors });
+        } else {
+          this.props.history.push('/');
+          console.log('Course created!');
+        }
+      })
+      .catch((err) => {
+        console.log('Error: ', err);
+        this.props.history.push('/error')
+      });
+  };
+
+  cancel = () => {
     this.props.history.push('/');
-}
+  };
 }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Form from './Form';
 
-export default class UserSignIn extends Component {
+export default class UserSignUp extends Component {
   state = {
     firstName: '',
     lastName: '',
@@ -10,7 +10,7 @@ export default class UserSignIn extends Component {
     password: '',
     confirmPassword: '',
     errors: [],
-  }
+  };
 
   render() {
     const {
@@ -19,65 +19,37 @@ export default class UserSignIn extends Component {
       emailAddress,
       password,
       confirmPassword,
-      errors
+      errors,
     } = this.state;
 
-    return (      
-        <div className="form--centered">
-          <h2>Sign Up</h2>
-          <Form 
-            cancel={this.cancel}
-            errors={errors}
-            submit={this.submit}
-            submitButtonText="Sign Up"
-            elements={() => (
-              <React.Fragment>
-                <label>First Name</label>  
-                <input 
-                  id="firstName" 
-                  name="firstName" 
-                  type="text"
-                  value={firstName} 
-                  onChange={this.change} 
-                />
-                <label>Last Name</label>
-                <input 
-                  id="lastName" 
-                  name="lastName" 
-                  type="text"
-                  value={lastName} 
-                  onChange={this.change} 
-                />
-                <label>Email Address</label>
-                <input 
-                  id="emailAddress" 
-                  name="emailAddress" 
-                  type="email"
-                  value={emailAddress} 
-                  onChange={this.change} 
-                />
-                <label>Password</label>
-                <input 
-                  id="password" 
-                  name="password" 
-                  type="password"
-                  value={password} 
-                  onChange={this.change} 
-                />
-                <label>Confirm Password</label>
-                <input 
-                  id="confirmPassword" 
-                  name="confirmPassword" 
-                  type="password"
-                  value={confirmPassword} 
-                  onChange={this.change} 
-                />               
-              </React.Fragment>
-            )} />
-          <p>
-          Already have a user account? Click here to <Link to="/signin">sign in</Link>!
-          </p>
-        </div>      
+    return (
+      <div className="form--centered">
+        <h2>Sign Up</h2>
+        <Form
+          submitButtonText="Sign Up"
+          submit={this.submit}
+          cancel={this.cancel}
+          errors={errors}
+          elements={() => (
+            <React.Fragment>
+              <label htmlFor="firstName">First Name</label>
+              <input id="firstName" name="firstName" type="text" value={firstName} onChange={this.change} />
+              <label htmlFor="lastName">Last Name</label>
+              <input id="lastName" name="lastName" type="text" value={lastName} onChange={this.change} />
+              <label htmlFor="emailAddress">Email Address</label>
+              <input id="emailAddress" name="emailAddress" type="email" value={emailAddress} onChange={this.change} />
+              <label htmlFor="password">Password</label>
+              <input id="password" name="password" type="password" value={password} onChange={this.change} />
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input id="confirmPassword" name="confirmPassword" type="password" value={confirmPassword} onChange={this.change} />
+            </React.Fragment>
+          )}
+        />
+
+        <p>
+        Already have a user account? <Link to="/signin">Click here</Link> to sign in!
+        </p>
+      </div>
     );
   }
 
@@ -87,46 +59,40 @@ export default class UserSignIn extends Component {
 
     this.setState(() => {
       return {
-        [name]: value
+        [name]: value,
       };
     });
-  }
+  };
 
   submit = () => {
-    const { context } = this.props;      
-    const {
-      firstName,
-      lastName,
-      emailAddress,
-      password
-    } = this.state;
+    const { context } = this.props;
+    const { firstName, lastName, emailAddress, password } = this.state;
 
-    // New user payload
     const user = {
       firstName,
       lastName,
       emailAddress,
-      password
+      password,
     };
 
-    context.data.createUser(user)
-      .then(errors => {
+    context.data
+      .createUser(user).then((errors) => {
         if (errors.length) {
           this.setState({ errors });
         } else {
-          context.actions.signIn(emailAddress, password)
-            .then(() => {
-              this.props.history.push('/authenticated');
-            });
+          context.actions.signIn(emailAddress, password).then(() => {
+            this.props.history.push('/');
+          });
         }
       })
-      .catch( err => {
-        console.log(err);
+      .catch((err) => {
+        console.log('Error: ', err);
         this.props.history.push('/error');
       });
-  } 
+  };
 
   cancel = () => {
     this.props.history.push('/');
-  }
+  };
 }
+

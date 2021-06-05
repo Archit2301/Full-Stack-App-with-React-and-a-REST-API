@@ -1,13 +1,7 @@
 import React from 'react';
 
-export default (props) => {
-  const {
-    cancel,
-    errors,
-    submit,
-    submitButtonText,
-    elements,
-  } = props;
+const Form = (props) => {
+  const { elements, submitButtonText, submit, cancel, errors } = props;
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -23,14 +17,12 @@ export default (props) => {
     <div>
       <ErrorsDisplay errors={errors} />
       <form onSubmit={handleSubmit}>
-        {elements()}
-        <div className="pad-bottom">
-          <button className="button" type="submit">{submitButtonText}</button>
-          <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
-        </div>
+        { elements() }
+        <button className="button" type="submit">{submitButtonText}</button>
+        <button className="button button-secondary" onClick={handleCancel}>Cancel</button>
       </form>
     </div>
-  );
+  )
 }
 
 function ErrorsDisplay({ errors }) {
@@ -39,15 +31,17 @@ function ErrorsDisplay({ errors }) {
   if (errors.length) {
     errorsDisplay = (
       <div>
-        <h2 className="validation--errors--label">Validation errors</h2>
-        <div className="validation-errors">
+        <div className="validation--errors">
+          <h3>Validation Errors</h3>
           <ul>
-            {errors.map((error, i) => <li key={i}>{error}</li>)}
+            {errors.map((error, i) => <li key={i}>{error}</li> )}
           </ul>
         </div>
       </div>
-    );
+    )
   }
 
   return errorsDisplay;
 }
+
+export default Form;

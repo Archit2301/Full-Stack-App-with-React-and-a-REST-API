@@ -1,10 +1,15 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
-export default ({context}) => {
-  // component calls signOut and updates state after render
-  useEffect(() =>  context.actions.signOut());
+
+// Signout and redirect user to homepage
+const UserSignOut = ({ context }) => {
+  useEffect(() => context.actions.signOut());
 
   return (
-    <Redirect to="/" />
+    <div>
+      <Redirect to="/" />
+    </div>
   );
-}
+};
+
+export default UserSignOut;
