@@ -14,6 +14,7 @@ delete them. The user will be required to login using the correct username and p
 
 
 --Skills and Techniques
+
 JavaScript, npm, Node.js, Express, SQLite. SQL ORM, Sequelize, REST API,
 REST API Validation and Authentication, Data Relationship with SQL and Sequelize. 
 
