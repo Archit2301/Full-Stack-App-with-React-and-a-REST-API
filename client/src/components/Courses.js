@@ -1,3 +1,5 @@
+// Home component to list the courses by GET request to an api
+
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
@@ -9,7 +11,7 @@ export default class Courses extends Component {
     courses: []
   };
 
-  // Get courses to render the homepage display
+  // Get courses and render them in the homepage
   componentDidMount() {
     axios.get('http://localhost:5000/api/courses')      
       .then((data) => {

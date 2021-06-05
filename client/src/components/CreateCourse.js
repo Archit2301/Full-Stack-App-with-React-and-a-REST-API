@@ -73,6 +73,7 @@ export default class CreateCourse extends Component {
     )
   }
 
+  // Updated when the value of the input field changes
   change = (event) => {
     const name = event.target.name;
     const value = event.target.value;
@@ -92,6 +93,7 @@ export default class CreateCourse extends Component {
 
     const course = { title, userId, description, estimatedTime, materialsNeeded };
 
+    // Call to createCourse function 
     context.data.createCourse(course, emailAddress, password)
       .then((errors) => {
         if (errors.length) {

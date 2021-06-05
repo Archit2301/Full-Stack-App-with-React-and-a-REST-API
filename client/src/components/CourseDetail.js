@@ -14,6 +14,7 @@ export default class CourseDetail extends Component {
     const authUser = context.authenticatedUser;
     const id = this.props.match.params.id;
 
+    // call to deleteCourse api call function
     context.data.deleteCourse(authUser.emailAddress, authUser.password, id)
       .then((errors) => {
         if (errors.length) {
@@ -29,6 +30,7 @@ export default class CourseDetail extends Component {
       });
   };
 
+  // Retrieve the course with the matched id in url
   componentDidMount() {
     fetch(`http://localhost:5000/api/courses/${this.props.match.params.id}`)
       .then((response) => response.json())

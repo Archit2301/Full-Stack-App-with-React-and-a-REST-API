@@ -89,17 +89,10 @@ export default class UpdateCourse extends Component {
     const { id, title, description, user, estimatedTime, materialsNeeded } =
       this.state;
 
-    const course = {
-      id,
-      title,
-      description,
-      user,
-      estimatedTime,
-      materialsNeeded,
-    };
+    const course = { id, title, description, user, estimatedTime, materialsNeeded };
 
-    context.data
-      .updateCourse(emailAddress, password, course, CourseId)
+    // Call to updateCourse function
+    context.data.updateCourse(emailAddress, password, course, CourseId)
       .then((errors) => {
         if (errors.length) {
           this.setState({ errors });

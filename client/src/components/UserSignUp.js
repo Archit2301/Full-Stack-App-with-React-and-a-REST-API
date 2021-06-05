@@ -88,11 +88,11 @@ export default class UserSignUp extends Component {
       .catch((err) => {
         console.log('Error: ', err);
         this.props.history.push('/error');
-      });
-  };
+      })
+  }
 
   cancel = () => {
     this.props.history.push('/');
-  };
+  }
 }
 

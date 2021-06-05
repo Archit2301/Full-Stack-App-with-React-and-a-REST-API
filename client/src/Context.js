@@ -33,6 +33,7 @@ export class Provider extends Component {
     );
   }
 
+  // Email and password passed as a paramneter to authenticate the user
   signIn = async (emailAddress, password) => {
     const user = await this.data.getUser(emailAddress, password);
     if (user !== null) {
@@ -43,6 +44,7 @@ export class Provider extends Component {
           authenticatedUser: user 
         }
       })
+      // Setting up the cookie
       Cookies.set('authenticatedUser', JSON.stringify(user), {expires: 1});
     }
     return user;
@@ -54,6 +56,7 @@ export class Provider extends Component {
         authenticatedUser: null
       }
     })
+    // Removes cookies containing user credentials
     Cookies.remove('authenticatedUser');
   }
 }
